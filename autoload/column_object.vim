@@ -4,24 +4,24 @@ endif
 let g:autoloaded_column_object = 1
 
 fu! s:find_boundary_lines(lnum, indent, col, vcol, step) abort "{{{1
-    let cur_lnum = a:lnum
+    let orig_lnum = a:lnum
     let limit    = a:step == 1 ? line('$') : 1
 
-    " We must distinguish 2 addresses: `cur_lnum` and `next_lnum`.
+    " We must distinguish 2 addresses: `orig_lnum` and `next_lnum`.
     "
-    " `cur_lnum` is the address of the latest line which we've tested, and
+    " `orig_lnum` is the address of the latest line which we've tested, and
     " which we know has text inside the column.
     "
     " Initially, it's the address of the current line on which the cursor
     " is when we hit one of our mappings (`ic`, `ac`, …):    `a:lnum`
     " Then, it may be increased or decreased at the end of each iteration of
-    " the `while` loop:    `let cur_lnum = next_lnum`
+    " the `while` loop:    `let orig_lnum = next_lnum`
     "
     " `next_line` is the address of the next line to test.
 
-    let is_code = synIDattr(synIDtrans(synID(cur_lnum, a:col, 1)), 'name') !=# 'Comment'
-    while cur_lnum != limit
-        let next_lnum       = cur_lnum + a:step
+    let is_code = synIDattr(synIDtrans(synID(orig_lnum, a:col, 1)), 'name') !=# 'Comment'
+    while orig_lnum != limit
+        let next_lnum       = orig_lnum + a:step
         let line            = getline(next_lnum)
 
         let has_same_indent = indent(next_lnum) == a:indent
@@ -31,9 +31,9 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, step) abort "{{{1
         let is_relevant     = is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') !=# 'Comment'
         \||                  !is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') ==# 'Comment'
         if has_same_indent && is_not_empty && is_long_enough && no_fold && is_relevant
-            let cur_lnum = next_lnum
+            let orig_lnum = next_lnum
         else
-            return cur_lnum
+            return orig_lnum
         endif
     endwhile
 
