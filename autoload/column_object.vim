@@ -4,9 +4,6 @@ endif
 let g:autoloaded_column_object = 1
 
 fu! s:find_boundary_lines(lnum, indent, col, vcol, step) abort "{{{1
-" TODO:
-" the selected lines should all be commented or uncommented depending on the
-" initial current line
     let cur_lnum = a:lnum
     let limit    = a:step == 1 ? line('$') : 1
 
@@ -22,20 +19,18 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, step) abort "{{{1
     "
     " `next_line` is the address of the next line to test.
 
+    let is_code = synIDattr(synIDtrans(synID(cur_lnum, a:col, 1)), 'name') !=# 'Comment'
     while cur_lnum != limit
         let next_lnum       = cur_lnum + a:step
         let line            = getline(next_lnum)
 
         let has_same_indent = indent(next_lnum) == a:indent
         let is_not_empty    = line =~ '\S'
-        let is_long_enough  = line =~ '\%' . a:vcol . 'v'
+        let is_long_enough  = line =~ '\%'.a:vcol.'v'
         let no_fold         = line !~ '{{{\|}}}'
-        " This condition is temporarily commented to test the column object
-        " inside comments.
-        " let is_not_comment  = synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') !=# 'Comment'
-
-        " if has_same_indent && is_not_empty && is_long_enough && is_not_comment
-        if has_same_indent && is_not_empty && is_long_enough && no_fold
+        let is_relevant     = is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') !=# 'Comment'
+        \||                  !is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') ==# 'Comment'
+        if has_same_indent && is_not_empty && is_long_enough && no_fold && is_relevant
             let cur_lnum = next_lnum
         else
             return cur_lnum
