@@ -1,8 +1,3 @@
-if exists('g:autoloaded_column_object')
-    finish
-endif
-let g:autoloaded_column_object = 1
-
 " FIXME:
 "         let maybe_nl = empty(lines) ? '' : "\n"
 "         let text = work_on_code
