@@ -119,7 +119,7 @@ fu! column_object#main(iw_aw) abort "{{{1
     "     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     "     " where a pattern match. Simply, use `matchstrpos()`.
     "     for a_line in range(fline - 1, orig_line)
-    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') isnot# ''
+    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') is# ''
     "             let get_out = 1
     "             let fline += 1
     "             break
@@ -145,7 +145,7 @@ fu! column_object#main(iw_aw) abort "{{{1
     "     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     "     " where a pattern match. Simply, use `matchstrpos()`.
     "     for a_line in range(orig_line, lline - 1)
-    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') isnot# ''
+    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') is# ''
     "             let get_out = 1
     "             let lline -= 1
     "             break
