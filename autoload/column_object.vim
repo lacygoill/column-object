@@ -47,7 +47,7 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
     let cur_lnum = a:lnum
     let limit = a:dir == 1 ? line('$') : 1
 
-    let is_code = synIDattr(synIDtrans(synID(cur_lnum, a:col, 1)), 'name') !=# 'Comment'
+    let is_code = synIDattr(synIDtrans(synID(cur_lnum, a:col, 1)), 'name') isnot# 'Comment'
     while cur_lnum != limit
         let next_lnum = cur_lnum + a:dir
         let line      = getline(next_lnum)
@@ -56,8 +56,8 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
         let is_not_empty    = line =~ '\S'
         let is_long_enough  = line =~ '\%'.a:vcol.'v'
         let is_not_folded   = line !~ '\%({{{\|}}}\)\%(\d\+\)\?\s*$'
-        let is_relevant     = is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') !=# 'Comment'
-        \||                  !is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') ==# 'Comment'
+        let is_relevant     = is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') isnot# 'Comment'
+        \||                  !is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') is# 'Comment'
 
         if has_same_indent && is_not_empty && is_long_enough && is_not_folded && is_relevant
             let cur_lnum = next_lnum
@@ -119,7 +119,7 @@ fu! column_object#main(iw_aw) abort "{{{1
     "     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     "     " where a pattern match. Simply, use `matchstrpos()`.
     "     for a_line in range(fline - 1, orig_line)
-    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') == ''
+    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') isnot# ''
     "             let get_out = 1
     "             let fline += 1
     "             break
@@ -145,7 +145,7 @@ fu! column_object#main(iw_aw) abort "{{{1
     "     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     "     " where a pattern match. Simply, use `matchstrpos()`.
     "     for a_line in range(orig_line, lline - 1)
-    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') == ''
+    "         if matchstr(getline(a_line), '\%'.col1.'c\<\k\{-}\%'.col2.'c\>') isnot# ''
     "             let get_out = 1
     "             let lline -= 1
     "             break
