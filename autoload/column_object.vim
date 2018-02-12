@@ -48,7 +48,7 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
     let limit = a:dir ==# 1 ? line('$') : 1
 
     let is_code = synIDattr(synIDtrans(synID(cur_lnum, a:col, 1)), 'name') isnot# 'Comment'
-    while cur_lnum != limit
+    while cur_lnum !=# limit
         let next_lnum = cur_lnum + a:dir
         let line      = getline(next_lnum)
 
