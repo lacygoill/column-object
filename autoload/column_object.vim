@@ -1,9 +1,9 @@
 " FIXME:
 "         let maybe_nl = empty(lines) ? '' : "\n"
 "         let text = work_on_code
-"         \?             join(             lines,  "\n").maybe_nl.             text_before_cursor
-"         \:             join(s:remove_cml(lines), "\n").maybe_nl.s:remove_cml(text_before_cursor)
-"                          ^
+"         \          ?    join(             lines,  "\n").maybe_nl.             text_before_cursor
+"         \          :    join(s:remove_cml(lines), "\n").maybe_nl.s:remove_cml(text_before_cursor)
+"                           ^
 "
 " Press `vio` right above the `^`.
 " The first/last character of any line in the selection should match a word boundary.
