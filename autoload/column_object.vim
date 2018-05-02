@@ -57,7 +57,7 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
         let is_long_enough  = line =~ '\%'.a:vcol.'v'
         let is_not_folded   = line !~ '\%({{{\|}}}\)\%(\d\+\)\?\s*$'
         let is_relevant     = is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') isnot# 'Comment'
-        \||                  !is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') is# 'Comment'
+        \ ||                 !is_code && synIDattr(synIDtrans(synID(next_lnum, a:col, 1)), 'name') is# 'Comment'
 
         if has_same_indent && is_not_empty && is_long_enough && is_not_folded && is_relevant
             let cur_lnum = next_lnum
@@ -86,7 +86,7 @@ fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort 
             let word_selected_is_not_empty =
             \      matchstr(getline('.'), '\%'.virtcol("'<").'v.*\%'.virtcol("'>").'v.') =~ '\S'
             if  !on_space &&  word_selected_is_not_empty
-            \||  on_space && !word_selected_is_not_empty
+            \ || on_space && !word_selected_is_not_empty
                 let vcol1 = min([ vcol1, virtcol("'<") ])
                 let vcol2 = max([ vcol2, virtcol("'>") ])
             endif
