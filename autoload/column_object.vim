@@ -70,7 +70,7 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
 endfu
 
 fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort "{{{1
-    let [ vcol1, vcol2 ]  = [-1, -1]
+    let [vcol1, vcol2]  = [-1, -1]
     let l:lnum   = a:top_line
     let on_space = a:on_space
 
@@ -80,21 +80,21 @@ fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort 
         "                                 │
         exe printf("keepj norm! %dG%d|v%s\e", l:lnum, a:vcol, a:iw_aw)
 
-        if [ vcol1, vcol2 ] ==# [-1, -1]
-            let [ vcol1, vcol2 ] = [ virtcol("'<"), virtcol("'>") ]
+        if [vcol1, vcol2] ==# [-1, -1]
+            let [vcol1, vcol2] = [virtcol("'<"), virtcol("'>")]
         else
             let word_selected_is_not_empty =
             \      matchstr(getline('.'), '\%'.virtcol("'<").'v.*\%'.virtcol("'>").'v.') =~ '\S'
             if  !on_space &&  word_selected_is_not_empty
             \ || on_space && !word_selected_is_not_empty
-                let vcol1 = min([ vcol1, virtcol("'<") ])
-                let vcol2 = max([ vcol2, virtcol("'>") ])
+                let vcol1 = min([vcol1, virtcol("'<")])
+                let vcol2 = max([vcol2, virtcol("'>")])
             endif
         endif
         let l:lnum += 1
     endwhile
 
-    return [ vcol1, vcol2 ]
+    return [vcol1, vcol2]
 endfu
 
 fu! column_object#main(iw_aw) abort "{{{1
@@ -102,19 +102,19 @@ fu! column_object#main(iw_aw) abort "{{{1
         return
     endif
 
-    " let [ orig_col, orig_line ] = [ col('.'), line('.') ]
-    " let [ word, fcol, lcol ] =
+    " let [orig_col, orig_line] = [col('.'), line('.')]
+    " let [word, fcol, lcol] =
     " \         matchstrpos(getline('.'), '\<\k\{-}\%'.orig_col.'c\k\{-}\>')
 
     " let fline = orig_line - 1
     " while fline >= 1
-    "     let [ word, col1, col2 ] =
+    "     let [word, col1, col2] =
     "     \         matchstrpos(getline(fline), '\<\k\{-}\%'.orig_col.'c\k\{-}\>')
     "     if col1 < 0 || col2 < 0
     "         let fline += 1
     "         break
     "     endif
-    "     let [ col1, col2 ] = [ col1+1, col2+1 ]
+    "     let [col1, col2] = [col1+1, col2+1]
     "     let get_out = 0
     "     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     "     " where a pattern match. Simply, use `matchstrpos()`.
@@ -128,19 +128,19 @@ fu! column_object#main(iw_aw) abort "{{{1
     "     if get_out
     "         break
     "     endif
-    "     let [ fcol, lcol ] = [ col1, col2 ]
+    "     let [fcol, lcol] = [col1, col2]
     "     let fline -= 1
     " endwhile
 
     " let lline = orig_line + 1
     " while lline <= line('$')
-    "     let [ word, col1, col2 ] =
+    "     let [word, col1, col2] =
     "     \         matchstrpos(getline(lline), '\<\k\{-}\%'.orig_col.'c\k\{-}\>')
     "     if col1 < 0 || col2 < 0
     "         let lline -= 1
     "         break
     "     endif
-    "     let [ col1, col2 ] = [ col1+1, col2+1 ]
+    "     let [col1, col2] = [col1+1, col2+1]
     "     let get_out = 0
     "     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     "     " where a pattern match. Simply, use `matchstrpos()`.
@@ -154,7 +154,7 @@ fu! column_object#main(iw_aw) abort "{{{1
     "     if get_out
     "         break
     "     endif
-    "     let [ fcol, lcol ] = [ col1, col2 ]
+    "     let [fcol, lcol] = [col1, col2]
     "     let lline += 1
     " endwhile
 
@@ -181,9 +181,9 @@ fu! column_object#main(iw_aw) abort "{{{1
     "                             │
     exe 'keepj norm! v'.a:iw_aw."\e"
 
-    let top_line         = s:find_boundary_lines(line('.'), indent('.'), col("'<"), virtcol("'<"), -1)
-    let bottom_line      = s:find_boundary_lines(line('.'), indent('.'), col("'<"), virtcol("'<"), 1)
-    let [ vcol1, vcol2 ] = s:find_boundary_columns(top_line, bottom_line, virtcol("'<"), a:iw_aw, on_space)
+    let top_line       = s:find_boundary_lines(line('.'), indent('.'), col("'<"), virtcol("'<"), -1)
+    let bottom_line    = s:find_boundary_lines(line('.'), indent('.'), col("'<"), virtcol("'<"), 1)
+    let [vcol1, vcol2] = s:find_boundary_columns(top_line, bottom_line, virtcol("'<"), a:iw_aw, on_space)
 
     exe 'keepj norm! '.top_line.'G'.vcol1."|\<c-v>".bottom_line.'G'.vcol2.'|'
 endfu
