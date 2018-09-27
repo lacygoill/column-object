@@ -71,14 +71,14 @@ endfu
 
 fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort "{{{1
     let [vcol1, vcol2]  = [-1, -1]
-    let l:lnum   = a:top_line
+    let lnum   = a:top_line
     let on_space = a:on_space
 
-    while l:lnum <= a:bottom_line
+    while lnum <= a:bottom_line
 
         "                                 ┌─ necessary to set the marks '< and '>
         "                                 │
-        exe printf("keepj norm! %dG%d|v%s\e", l:lnum, a:vcol, a:iw_aw)
+        exe printf("keepj norm! %dG%d|v%s\e", lnum, a:vcol, a:iw_aw)
 
         if [vcol1, vcol2] ==# [-1, -1]
             let [vcol1, vcol2] = [virtcol("'<"), virtcol("'>")]
@@ -91,7 +91,7 @@ fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort 
                 let vcol2 = max([vcol2, virtcol("'>")])
             endif
         endif
-        let l:lnum += 1
+        let lnum += 1
     endwhile
 
     return [vcol1, vcol2]
