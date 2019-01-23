@@ -16,10 +16,10 @@
 " Select current word on current line.
 " On next line, from same original column position, select current word:
 "
-"         • if the new set of column indexes is included in the previous one,
+"         - if the new set of column indexes is included in the previous one,
 "           go on to next line
 "
-"         • if it's not check whether the 1st/last column index is the
+"         - if it's not check whether the 1st/last column index is the
 "           first/last character in a word, in ALL previous lines:
 "
 "               - if they don't, stop the object on the previous line
@@ -165,10 +165,10 @@ fu! column_object#main(iw_aw) abort "{{{1
     " Select current word on current line.
     " On next line, from same original column position, select current word:
     "
-    "         • if the new set of column indexes is included in the previous one,
+    "         - if the new set of column indexes is included in the previous one,
     "           go on to next line
     "
-    "         • if it's not check whether the 1st/last column index is the
+    "         - if it's not check whether the 1st/last column index is the
     "           first/last character in a word, in ALL previous lines:
     "
     "               - if they don't, stop the object on the previous line
