@@ -177,7 +177,7 @@ fu! column_object#main(iw_aw) abort "{{{1
 
     let on_space = matchstr(getline('.'), '\%'.col('.').'c.') =~ '\s'
 
-    "                             ┌─ necessary to set the mark '<
+    "                             ┌ necessary to set the mark '<
     "                             │
     exe 'keepj norm! v'.a:iw_aw."\e"
 
