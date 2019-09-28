@@ -16,14 +16,14 @@
 " Select current word on current line.
 " On next line, from same original column position, select current word:
 "
-"         - if the new set of column indexes is included in the previous one,
-"           go on to next line
+"    - if the new set of column indexes is included in the previous one,
+"      go on to next line
 "
-"         - if it's not check whether the 1st/last column index is the
-"           first/last character in a word, in ALL previous lines:
+"    - if it's not check whether the 1st/last column index is the
+"      first/last character in a word, in ALL previous lines:
 "
-"               - if they don't, stop the object on the previous line
-"               - if they do, go on to next line
+"        * if they don't, stop the object on the previous line
+"        * if they do, go on to next line
 "
 " 2.
 " Same as before,  except, don't check whether the 1st/last  column index is the
@@ -76,7 +76,7 @@ fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort 
 
     while lnum <= a:bottom_line
 
-        "                                 ┌─ necessary to set the marks '< and '>
+        "                                 ┌ necessary to set the marks '< and '>
         "                                 │
         exe printf("keepj norm! %dG%d|v%s\e", lnum, a:vcol, a:iw_aw)
 
@@ -165,15 +165,14 @@ fu! column_object#main(iw_aw) abort "{{{1
     " Select current word on current line.
     " On next line, from same original column position, select current word:
     "
-    "         - if the new set of column indexes is included in the previous one,
-    "           go on to next line
+    "    - if the new set of column indexes is included in the previous one,
+    "      go on to next line
     "
-    "         - if it's not check whether the 1st/last column index is the
-    "           first/last character in a word, in ALL previous lines:
+    "    - if it's not check whether the 1st/last column index is the
+    "      first/last character in a word, in ALL previous lines:
     "
-    "               - if they don't, stop the object on the previous line
-    "               - if they do, go on to next line
-    "
+    "        * if they don't, stop the object on the previous line
+    "        * if they do, go on to next line
 
     let on_space = matchstr(getline('.'), '\%'.col('.').'c.') =~ '\s'
 
