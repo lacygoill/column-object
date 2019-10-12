@@ -43,7 +43,7 @@
 " If we want to implement one of the previous 2 algo, we need to start searching
 " for the columns, then the lines.
 
-fu! s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
+fu s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
     let cur_lnum = a:lnum
     let limit = a:dir == 1 ? line('$') : 1
 
@@ -69,7 +69,7 @@ fu! s:find_boundary_lines(lnum, indent, col, vcol, dir) abort "{{{1
     return limit
 endfu
 
-fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort "{{{1
+fu s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort "{{{1
     let [vcol1, vcol2]  = [-1, -1]
     let lnum   = a:top_line
     let on_space = a:on_space
@@ -97,7 +97,7 @@ fu! s:find_boundary_columns(top_line, bottom_line, vcol, iw_aw, on_space) abort 
     return [vcol1, vcol2]
 endfu
 
-fu! column_object#main(iw_aw) abort "{{{1
+fu column_object#main(iw_aw) abort "{{{1
     if getline('.') =~ '^\s*$'
         return
     endif
