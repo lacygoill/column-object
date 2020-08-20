@@ -179,7 +179,11 @@ fu column_object#main(iw_aw) abort "{{{1
     "        * if they don't, stop the object on the previous line
     "        * if they do, go on to next line
 
-    let on_space = getline('.')->matchstr('\%' .. col('.') .. 'c.') =~ '\s'
+    " TODO: If you refactor this function in a `:def` function, this can be shortened into:
+    "
+    "     let on_space = getline('.')->strpart(col('.') - 1)[0] =~ '\s'
+    "
+    let on_space = getline('.')->strpart(col('.') - 1)->strcharpart(0, 1) =~ '\s'
 
     "                                 ┌ necessary to set the mark '<
     "                                 │
