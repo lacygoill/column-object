@@ -1,7 +1,7 @@
-if exists('g:loaded_column_object')
-    finish
-endif
-let g:loaded_column_object = 1
+vim9 noclear
+
+if exists('loaded') | finish | endif
+var loaded = true
 
 xno <unique> io <c-\><c-n><cmd>call column_object#main('iw')<cr>
 xno <unique> iO <c-\><c-n><cmd>call column_object#main('iW')<cr>
