@@ -48,7 +48,7 @@ var loaded = true
 # If we want to implement one of the previous 2 algo, we need to start searching
 # for the columns, then the lines.
 
-def column_object#main(iw_aw: string) #{{{1
+def columnObject#main(iw_aw: string) #{{{1
     if getline('.') =~ '^\s*$'
         return
     endif
