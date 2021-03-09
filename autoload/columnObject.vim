@@ -213,7 +213,7 @@ def FindBoundaryColumns( #{{{1
         #                                 │
         exe printf("keepj norm! %dG%d|v%s\e", lnum, vcol, iw_aw)
 
-        if [vcol1, vcol2] ==# [-1, -1]
+        if [vcol1, vcol2] == [-1, -1]
             [vcol1, vcol2] = [virtcol("'<"), virtcol("'>")]
         else
             var word_selected_is_not_empty: bool = getline('.')
