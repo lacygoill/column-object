@@ -69,7 +69,7 @@ def columnObject#main(iw_aw: string) #{{{1
     #     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     #     " where a pattern match.  Simply, use `matchstrpos()`.
     #     for a_line in range(fline - 1, orig_line)
-    #         if getline(a_line)->matchstr('\%' .. col1 .. 'c\<\k\{-}\%' .. col2 .. 'c\>') == ''
+    #         if getline(a_line)->match('\%' .. col1 .. 'c\<\k\{-}\%' .. col2 .. 'c\>') == -1
     #             let get_out = 1
     #             let fline += 1
     #             break
@@ -94,7 +94,7 @@ def columnObject#main(iw_aw: string) #{{{1
     #     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
     #     " where a pattern match.  Simply, use `matchstrpos()`.
     #     for a_line in range(orig_line, lline - 1)
-    #         if getline(a_line)->matchstr('\%' .. col1 .. 'c\<\k\{-}\%' .. col2 .. 'c\>') == ''
+    #         if getline(a_line)->match('\%' .. col1 .. 'c\<\k\{-}\%' .. col2 .. 'c\>') == -1
     #             let get_out = 1
     #             let lline -= 1
     #             break
@@ -123,7 +123,7 @@ def columnObject#main(iw_aw: string) #{{{1
     #        * if they don't, stop the object on the previous line
     #        * if they do, go on to next line
 
-    var on_space: bool = getline('.')->strpart(col('.') - 1)[0] =~ '\s'
+    var on_space: bool = getline('.')[charcol('.') - 1] =~ '\s'
 
     #                               ┌ necessary to set the mark '<
     #                               │
@@ -208,10 +208,7 @@ def FindBoundaryColumns( #{{{1
     var lnum: number = top_line
 
     while lnum <= bottom_line
-
-        #                                 ┌ necessary to set the marks '< and '>
-        #                                 │
-        exe printf("keepj norm! %dG%d|v%s\e", lnum, vcol, iw_aw)
+        exe 'keepj norm! ' .. lnum .. 'G' .. vcol .. '|v' .. iw_aw .. "\e"
 
         if [vcol1, vcol2] == [-1, -1]
             [vcol1, vcol2] = [virtcol("'<"), virtcol("'>")]
