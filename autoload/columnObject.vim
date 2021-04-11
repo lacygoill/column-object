@@ -49,67 +49,10 @@ var loaded = true
 # for the columns, then the lines.
 
 def columnObject#main(iw_aw: string) #{{{1
-    if getline('.') =~ '^\s*$'
+    var line: string = getline('.')
+    if line =~ '^\s*$'
         return
     endif
-
-    # let [orig_col, orig_line] = [col('.'), line('.')]
-    # let [word, fcol, lcol] = getline('.')->matchstrpos('\<\k\{-}\%'.orig_col.'c\k\{-}\>')
-
-    # let fline = orig_line - 1
-    # while fline >= 1
-    #     let [word, col1, col2] =
-    #     \         getline(fline)->matchstrpos('\<\k\{-}\%' .. orig_col .. 'c\k\{-}\>')
-    #     if col1 < 0 || col2 < 0
-    #         let fline += 1
-    #         break
-    #     endif
-    #     let [col1, col2] = [col1 + 1, col2 + 1]
-    #     let get_out = 0
-    #     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
-    #     " where a pattern match.  Simply, use `matchstrpos()`.
-    #     for a_line in range(fline - 1, orig_line)
-    #         if getline(a_line)->match('\%' .. col1 .. 'c\<\k\{-}\%' .. col2 .. 'c\>') == -1
-    #             let get_out = 1
-    #             let fline += 1
-    #             break
-    #         endif
-    #     endfor
-    #     if get_out
-    #         break
-    #     endif
-    #     let [fcol, lcol] = [col1, col2]
-    #     let fline -= 1
-    # endwhile
-
-    # let lline = orig_line + 1
-    # while lline <= line('$')
-    #     let [word, col1, col2] = getline(lline)->matchstrpos('\<\k\{-}\%' .. orig_col .. 'c\k\{-}\>')
-    #     if col1 < 0 || col2 < 0
-    #         let lline -= 1
-    #         break
-    #     endif
-    #     let [col1, col2] = [col1 + 1, col2 + 1]
-    #     let get_out = 0
-    #     " NOTE: don't use `matchstr()` in a for loop to get the index of an item
-    #     " where a pattern match.  Simply, use `matchstrpos()`.
-    #     for a_line in range(orig_line, lline - 1)
-    #         if getline(a_line)->match('\%' .. col1 .. 'c\<\k\{-}\%' .. col2 .. 'c\>') == -1
-    #             let get_out = 1
-    #             let lline -= 1
-    #             break
-    #         endif
-    #     endfor
-    #     if get_out
-    #         break
-    #     endif
-    #     let [fcol, lcol] = [col1, col2]
-    #     let lline += 1
-    # endwhile
-
-    # call cursor(fline, fcol-1)
-    # exe "norm! \<c-v>" .. lline .. 'G'
-    # call cursor(lline, lcol-1)
 
     # Select current word on current line.
     # On next line, from same original column position, select current word:
@@ -123,26 +66,30 @@ def columnObject#main(iw_aw: string) #{{{1
     #        * if they don't, stop the object on the previous line
     #        * if they do, go on to next line
 
-    var on_space: bool = getline('.')[charcol('.') - 1] =~ '\s'
+    var on_space: bool = line[charcol('.') - 1] =~ '\s'
 
     #                               ┌ necessary to set the mark '<
     #                               │
     exe 'keepj norm! v' .. iw_aw .. "\e"
 
+    var lnum: number = line('.')
+    var indent: number = indent('.')
+    var startcol: number = col("'<")
+    var startvcol: number = virtcol([line("'<"), startcol - 1]) + 1
     var top_line: number = FindBoundaryLines(
-        line('.'),
-        indent('.'),
-        col("'<"),
-        virtcol("'<"),
+        lnum,
+        indent,
+        startcol,
+        startvcol,
         -1
-        )
+    )
     var bottom_line: number = FindBoundaryLines(
-        line('.'),
-        indent('.'),
-        col("'<"),
-        virtcol("'<"),
+        lnum,
+        indent,
+        startcol,
+        startvcol,
         1
-        )
+    )
     var vcol1: number
     var vcol2: number
     [vcol1, vcol2] = FindBoundaryColumns(
@@ -151,9 +98,12 @@ def columnObject#main(iw_aw: string) #{{{1
         virtcol("'<"),
         iw_aw,
         on_space
-        )
+    )
 
-    exe 'keepj norm! ' .. top_line .. 'G' .. vcol1 .. "|\<c-v>" .. bottom_line .. 'G' .. vcol2 .. '|'
+    exe 'keepj norm! '
+        .. top_line .. 'G' .. vcol1 .. '|'
+        .. "\<c-v>"
+        .. bottom_line .. 'G' .. vcol2 .. '|'
 enddef
 
 def FindBoundaryLines( #{{{1
@@ -162,7 +112,7 @@ def FindBoundaryLines( #{{{1
     col: number,
     vcol: number,
     dir: number
-    ): number
+): number
 
     var cur_lnum: number = lnum
     var limit: number = dir == 1 ? line('$') : 1
@@ -201,7 +151,7 @@ def FindBoundaryColumns( #{{{1
     vcol: number,
     iw_aw: string,
     on_space: bool
-    ): list<number>
+): list<number>
 
     var vcol1: number = -1
     var vcol2: number = -1
@@ -213,11 +163,12 @@ def FindBoundaryColumns( #{{{1
         if [vcol1, vcol2] == [-1, -1]
             [vcol1, vcol2] = [virtcol("'<"), virtcol("'>")]
         else
-            var word_selected_is_not_empty: bool = getline('.')
-                ->matchstr('\%' .. virtcol("'<") .. 'v.*\%' .. virtcol("'>") .. 'v.')
-                =~ '\S'
-            if !on_space && word_selected_is_not_empty
-             || on_space && !word_selected_is_not_empty
+            var pat: string = '\%>' .. (virtcol([line("'<"), col("'<") - 1])) .. 'v'
+                           .. '\S'
+                           .. '\%<' .. (virtcol("'>") + 1) .. 'v.'
+            var selected_word_is_not_empty: bool = getline('.') =~ pat
+            if !on_space && selected_word_is_not_empty
+             || on_space && !selected_word_is_not_empty
                 vcol1 = min([vcol1, virtcol("'<")])
                 vcol2 = max([vcol2, virtcol("'>")])
             endif
