@@ -173,7 +173,7 @@ def FindBoundaryColumns( #{{{1
                 vcol2 = max([vcol2, virtcol("'>")])
             endif
         endif
-        lnum += 1
+        ++lnum
     endwhile
 
     return [vcol1, vcol2]
