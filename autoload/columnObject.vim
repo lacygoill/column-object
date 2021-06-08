@@ -128,10 +128,10 @@ def FindBoundaryLines( #{{{1
         var is_not_empty: bool = line =~ '\S'
         var is_long_enough: bool = line =~ '\%' .. vcol .. 'v'
         var is_not_folded: bool = line !~ '\%({{' .. '{\|}}' .. '}\)\%(\d\+\)\=\s*$'
-        var is_relevant: bool = is_code && synID(next_lnum, col, 1)
+        var is_relevant: bool = is_code && synID(next_lnum, col, true)
             ->synIDtrans()
             ->synIDattr('name') != 'Comment'
-            || !is_code && synID(next_lnum, col, 1)
+            || !is_code && synID(next_lnum, col, true)
             ->synIDtrans()
             ->synIDattr('name') == 'Comment'
 
