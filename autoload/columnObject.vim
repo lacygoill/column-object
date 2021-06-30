@@ -68,9 +68,8 @@ def columnObject#main(iw_aw: string) #{{{1
 
     var on_space: bool = line[charcol('.') - 1] =~ '\s'
 
-    #                               ┌ necessary to set the mark '<
-    #                               │
-    exe 'keepj norm! v' .. iw_aw .. "\e"
+    # pressing Escape is necessary to set the mark '<
+    execute 'keepjumps normal! v' .. iw_aw .. "\<Esc>"
 
     var lnum: number = line('.')
     var indent: number = indent('.')
@@ -100,9 +99,9 @@ def columnObject#main(iw_aw: string) #{{{1
         on_space
     )
 
-    exe 'keepj norm! '
+    execute 'keepjumps normal! '
         .. top_line .. 'G' .. vcol1 .. '|'
-        .. "\<c-v>"
+        .. "\<C-V>"
         .. bottom_line .. 'G' .. vcol2 .. '|'
 enddef
 
@@ -158,7 +157,7 @@ def FindBoundaryColumns( #{{{1
     var lnum: number = top_line
 
     while lnum <= bottom_line
-        exe 'keepj norm! ' .. lnum .. 'G' .. vcol .. '|v' .. iw_aw .. "\e"
+        execute 'keepjumps normal! ' .. lnum .. 'G' .. vcol .. '|v' .. iw_aw .. "\<Esc>"
 
         if [vcol1, vcol2] == [-1, -1]
             [vcol1, vcol2] = [virtcol("'<"), virtcol("'>")]
