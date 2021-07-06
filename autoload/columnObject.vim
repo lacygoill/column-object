@@ -1,8 +1,5 @@
 vim9script noclear
 
-if exists('loaded') | finish | endif
-var loaded = true
-
 # FIXME:
 #         let maybe_nl = empty(lines) ? '' : "\n"
 #         let text = work_on_code
